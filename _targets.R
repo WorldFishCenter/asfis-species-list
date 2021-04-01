@@ -32,6 +32,11 @@ list(
   tar_target(
     name = merged_list,
     command = merge_tables(ihh_list, asfis_list, asfis_divisions)
+  ),
+  tar_target(
+    name = output_list_csv,
+    command = (function(x, file) {readr::write_csv(x, file); file})(merged_list, "data/processed/species_list_isscaap.csv"),
+    format = "file"
   )
 )
 
