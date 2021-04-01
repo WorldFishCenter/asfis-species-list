@@ -3,8 +3,8 @@ services:
   r:
     build: .
     ports:
-      - "8787:8787"
+      - "8805:8787"
     volumes:
-      - .:/home/rstudio/workspace
+      - .:/home/rstudio/asfis-species-list
     environment:
       DISABLE_AUTH: "true"
