@@ -5,18 +5,19 @@ This repo contains matches the species from the [Illuminating hidden
 harvest](https://fish.cgiar.org/research-areas/projects/illuminating-hidden-harvests)
 project to their corresponding FAO ISSCAAP codes.
 
-The species lists can be found in [data/raw/IHH\_species\_list.csv]().
-The species lists with the corresponding codes (the primary output of
-this repo) can be found in
-[data/processed/species\_list\_isscaap.csv]().
+The species lists can be found in
+[data/raw/IHH\_species\_list.csv](data/raw/IHH_species_list.csv). The
+species lists with the corresponding codes (the primary output of this
+repo) can be found in
+[data/processed/species\_list\_isscaap.csv](data/processed/species_list_isscaap.csv).
 
 ## Data sources
 
   - The 2020 version of the ASFIS List of Species for Fishery Statistics
     Purposes which can be downloaded from:
-    [http://www.fao.org/fishery/collection/asfis/en]()
+    <http://www.fao.org/fishery/collection/asfis/en>
   - The FAOSTAT division table which can be accessed at
-    [https://github.com/openfigis/RefData/tree/gh-pages/species]()
+    <https://github.com/openfigis/RefData/tree/gh-pages/species>
 
 ## Approach
 
