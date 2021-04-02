@@ -27,7 +27,8 @@ list(
     name = ihh_list,
     command = readr::read_csv(
       file = "data/raw/IHH_species_list.csv",
-      col_types = readr::cols(.default = readr::col_character()))
+      col_types = readr::cols(.default = readr::col_character()),
+      locale = locale(encoding = "ISO-8859-1"))
   ),
   tar_target(
     name = isscaap_species_info,
