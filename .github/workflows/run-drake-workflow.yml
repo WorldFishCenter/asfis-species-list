@@ -25,7 +25,7 @@ jobs:
           username: $GITHUB_ACTOR
           password: "${{ secrets.GITHUB_TOKEN }}"
           registry: docker.pkg.github.com
-          image_name: "${{echo env.GITHUB_REPOSITORY | sed :/:_:g }}"
+          image_name: "${{env.GITHUB_REPOSITORY | sed :/:_:g }}"
 
       - name: Run Targets workflow
         run: docker run -v $(pwd):/home -w /home --name rstudio_container ${{ steps.build_docker.outputs.FULL_IMAGE_NAME }} make
