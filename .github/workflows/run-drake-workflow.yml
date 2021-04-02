@@ -22,7 +22,9 @@ jobs:
         id: image-name
         run: |
           # replace slashes with underscores
-          echo "::set-output name=image-name::$(echo $GITHUB_REPOSITORY | sed :/:_:g)"
+          no_slash_repo_name=$(echo $GITHUB_REPOSITORY | grep -o '/.*' | cut -f2 -d/)
+          echo no_slash_repo_name
+          echo "::set-output name=image-name::no_slash_repo_name
 
       - name: Build image with cache
         id: build_docker
