@@ -18,6 +18,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Define docker image name
+        id: image-name
+        run: |
+          # replace slashes with underscores
+          echo "::set-output name=image-name::$(echo $GITHUB_REPOSITORY | sed :/:_:g)"
+
       - name: Build image with cache
         id: build_docker
         uses: whoan/docker-build-with-cache-action@v5
@@ -25,7 +31,7 @@ jobs:
           username: $GITHUB_ACTOR
           password: "${{ secrets.GITHUB_TOKEN }}"
           registry: docker.pkg.github.com
-          image_name: "${{env.GITHUB_REPOSITORY | sed :/:_:g }}"
+          image_name: ${{steps.image-name.outputs.image-name}}
 
       - name: Run Targets workflow
         run: docker run -v $(pwd):/home -w /home --name rstudio_container ${{ steps.build_docker.outputs.FULL_IMAGE_NAME }} make
