@@ -2,6 +2,7 @@
 
 options(tidyverse.quiet = TRUE)
 library(targets)
+library(tarchetypes)
 library(tidyverse)
 
 # load functions
@@ -47,15 +48,19 @@ list(
     command = derive_family_info(isscaap_species_info)
   ),
   tar_target(
-  name = merged_list,
-  command = fill_list(ihh_list, isscaap_species_info,
-                      isscaap_genus_specific_info, isscaap_genus_derived_info,
-                      isscaap_family_derived_info)
+    name = merged_list,
+    command = fill_list(ihh_list, isscaap_species_info,
+                        isscaap_genus_specific_info, isscaap_genus_derived_info,
+                        isscaap_family_derived_info)
   ),
   tar_target(
-  name = output_list_csv,
-  command = (function(x, file) {readr::write_csv(x, file); file})(merged_list, "data/processed/species_list_isscaap.csv"),
-  format = "file"
+    name = output_list_csv,
+    command = (function(x, file) {readr::write_csv(x, file); file})(merged_list, "data/processed/species_list_isscaap.csv"),
+    format = "file"
+  ),
+  tar_render(
+    name = readme,
+    path = "README.Rmd"
   )
 )
 

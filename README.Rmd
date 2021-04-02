@@ -5,24 +5,44 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(targets)
 ```
 
-## R Markdown
+This repo contains matches the species from the [Illuminating hidden harvest](https://fish.cgiar.org/research-areas/projects/illuminating-hidden-harvests) project to their corresponding FAO ISSCAAP codes. 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The species lists can be found in [data/raw/IHH_species_list.csv](). The species lists with the corresponding codes (the primary output of this repo) can be found in [data/processed/species_list_isscaap.csv](). 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Data sources
 
-```{r cars}
-summary(cars)
+* The 2020 version of the ASFIS List of Species for Fishery Statistics Purposes which can be downloaded from: [http://www.fao.org/fishery/collection/asfis/en]()
+* The FAOSTAT division table which can be accessed at [https://github.com/openfigis/RefData/tree/gh-pages/species]()
+
+## Approach
+
+1. Match species by their binomial name. If that fails...
+2. Match species by their genus. The ASFIS list of species indicates the ISSCAAP group code for some species at the genus level. E.g. *Ictiobus spp* is recorded in the list  ASFIS list as the specific name under code 11 (Carps, barbels and other cyprinids / Freshwater fishes). This indicates that species in the *Ictiobus* genus not recorded in the list in the binomial form can be assigned to that ISSCAAP code. If that fails...
+3. If all the species from a genus in the ASFIS list belong to the ISSCAAP group code is possible to assume that other species in the genus can be classified under the same group code. This is not warranted and is indicated as a flag in the output dataset. If that fails...
+4. I repeat the last two steps but using the genus obtained from the binomial name rather than the one in the genus column. These do not match in all cases usually because the taxonomy has changed and the species has been assigned a new name. For instance *Pseudograpsus setosus* was previously known as *Cancer setosus* and the later is the name found in the IHH list. If this fails...
+5. I repeat step 3 but using family instad of genus as the taxa to be matched. If that fails...
+6. I cannot match the species in the IHH species list to an ISSCAAP code automatically. 
+
+## Resluts
+
+```{r, include = F}
+tar_load(merged_list)
+
+summary_table <- merged_list %>% 
+  mutate(has_code = !is.na(isscaap_group_code), has_note = !is.na(note)) %>%
+  count(has_code, has_note) 
+
+missing_species <- filter(merged_list, is.na(isscaap_group_code))[["species_main"]]
 ```
 
-## Including Plots
+The IHH list contains `r nrow(merged_list)` species names. From those, `r filter(summary_table, has_code, !has_note)[["n"]]` were matched using the binomial name, `r filter(summary_table, has_code, has_note)[["n"]]` were matched using derived genus or family info, and it was not possible to match `r filter(summary_table, !has_code)[["n"]]` species. 
 
-You can also embed plots, for example:
+Specifically *`r missing_species`* were not found in the ASFIS species list and the equivalent code might need to be manually assigned.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+## Reproduce the results
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+To reproduce the results run `targets::tar_make()` from the R console or `make` from the bash terminal. The `Dockerfile` can be used to set up the computing environment required to run the code. 
