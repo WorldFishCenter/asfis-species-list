@@ -29,7 +29,7 @@ The species lists can be found in [data/raw/IHH_species_list.csv](data/raw/IHH_s
 
 ## Resluts
 
-```{r, include = F}
+```{r list-stats, include = F}
 tar_load(merged_list)
 
 summary_table <- merged_list %>% 
@@ -40,6 +40,23 @@ missing_species <- filter(merged_list, is.na(isscaap_group_code))[["species_main
 ```
 
 The IHH list contains `r nrow(merged_list)` species names. From those, `r filter(summary_table, has_code, !has_note)[["n"]]` were matched using the binomial name, `r filter(summary_table, has_code, has_note)[["n"]]` were matched using derived genus or family info, and it was not possible to match `r filter(summary_table, !has_code)[["n"]]` species. 
+
+```{r list-bar-plot, echo = F, fig.width = 10, fig.height =  4}
+merged_list %>%
+  mutate(isscaap_division_name = fct_infreq(isscaap_division_name), 
+         isscaap_division_name = fct_rev(isscaap_division_name)) %>%
+  ggplot(aes(x = isscaap_division_name, fill = isscaap_group_code)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  theme(legend.position = "none", 
+        axis.title.y = element_blank()) +
+  labs(title = "Species in the Illuminating Hiden Harvest list", 
+       subtitle = "According to the ISSCAAP divison categories", 
+       caption = "* Using the 2020 version of the ASFIS list for fishery statistic purposes\n* Coulours correspond to species groups", 
+       y = "Number of species")
+```
+
 
 Specifically *`r missing_species`* were not found in the ASFIS species list and the equivalent code might need to be manually assigned.
 

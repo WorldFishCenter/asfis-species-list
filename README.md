@@ -51,6 +51,8 @@ The IHH list contains 2135 species names. From those, 1712 were matched
 using the binomial name, 412 were matched using derived genus or family
 info, and it was not possible to match 11 species.
 
+![](README_files/figure-gfm/list-bar-plot-1.png)<!-- -->
+
 Specifically *Aristaeopsis edwardsiana, Glaucostegus cemiculus,
 Hemigrapsus crenulatus, Megastraea undosa, Metopograpsus messor, Mysis
 diluviana, Parasesarma erythodactylum, Platyxanthus orbignyi, Taliepus
